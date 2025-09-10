@@ -29,9 +29,6 @@ document.getElementById("tab-output").addEventListener("click", function () {
   selectTab("output");
   updateLive();
 });
-document.getElementById("tab-tournament").addEventListener("click", function () {
-  selectTab("tournament");
-});
 
 function getConfigs() {
   return chrome.storage.sync.get([CFG_KEY]).then(function (r) {

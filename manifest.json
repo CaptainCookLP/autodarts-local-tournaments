@@ -3,7 +3,7 @@
   "name": "Autodarts Toolkit",
   "version": "1.4.0",
   "description": "Helper for local tournaments and live data scraping on autodarts.io.",
-  "permissions": ["storage", "scripting", "activeTab", "contextMenus", "tabs", "webNavigation"],
+  "permissions": ["storage", "scripting", "activeTab", "contextMenus", "tabs"],
   "host_permissions": ["https://play.autodarts.io/*"],
   "background": { "service_worker": "service_worker.js" },
   "action": { "default_title": "Autodarts Toolkit", "default_popup": "popup.html" },
