@@ -1,5 +1,23 @@
 var CFG_KEY = "autodartsConfigs";
 var LIVE_KEY_PREFIX = "liveData::";
+var T_KEY = "tournament";
+var SETTINGS_KEYS = [
+  "base",
+  "in",
+  "out",
+  "rounds",
+  "bull",
+  "bulloff",
+  "match",
+  "lobby",
+  "legsTo",
+  "setsTo",
+  "legsPerSet",
+  "board",
+  "players",
+  "removeHost",
+  "startGame",
+];
 function getConfigs() {
   return chrome.storage.sync.get([CFG_KEY]).then(function (r) {
     return r && r[CFG_KEY] ? r[CFG_KEY] : {};
@@ -122,6 +140,34 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   });
   return true;
 });
+chrome.webNavigation.onCompleted.addListener(async function (details) {
+  try {
+    var url = details.url || "";
+    if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(url)) return;
+    var tabId = details.tabId;
+    var store = await chrome.storage.local.get([T_KEY]);
+    var t = store[T_KEY];
+    if (!t || !t.matches || t.current == null) return;
+    var m = t.matches[t.current];
+    if (!m || !m.p1 || !m.p2) return;
+    var settings = await chrome.storage.sync.get(SETTINGS_KEYS);
+    var basePayload = Object.assign({}, settings, {
+      base: m.mode,
+      players: m.p1 + ", " + m.p2,
+      __autodarts_helper: true,
+    });
+    var lobbyPayload = Object.assign({}, settings, {
+      players: m.p1 + ", " + m.p2,
+      __autodarts_helper_lobby: true,
+    });
+    await chrome.tabs.sendMessage(tabId, { type: "APPLY_AND_OPEN", payload: basePayload });
+    await chrome.tabs.sendMessage(tabId, { type: "CONFIGURE_LOBBY", payload: lobbyPayload });
+    t.current = Math.min(t.current + 1, t.matches.length);
+    var o = {}; o[T_KEY] = t; await chrome.storage.local.set(o);
+  } catch (e) {
+    console.warn("tournament handler", e);
+  }
+});
 if (
   chrome &&
   chrome.contextMenus &&
@@ -132,7 +178,7 @@ if (
     try {
       chrome.contextMenus.create({
         id: "openOptions",
-        title: "Autodarts Scraper: Einstellungen",
+        title: "Autodarts Toolkit: Einstellungen",
         contexts: ["action"],
       });
     } catch (e) {}

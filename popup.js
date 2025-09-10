@@ -74,3 +74,4 @@ document.getElementById("start").addEventListener("click", async () => {
 
   window.close();
 });
+
