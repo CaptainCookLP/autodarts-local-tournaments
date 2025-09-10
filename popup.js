@@ -11,7 +11,8 @@ async function sendWithRetry(tabId, message, tries = 12, delayMs = 750) {
     try {
       await chrome.tabs.sendMessage(tabId, message);
       return true;
-    } catch {
+    } catch (e) {
+      console.debug("sendMessage failed", e);
       await new Promise(r => setTimeout(r, delayMs));
     }
   }
@@ -22,16 +23,16 @@ function startPicker() {
   chrome.tabs
     .query({ active: true, currentWindow: true })
     .then(function (tabs) {
-      var tab = tabs && tabs[0];
+      const tab = tabs && tabs[0];
       if (!tab) return;
-      var isAd = false;
+      let isAd = false;
       try {
         isAd = new URL(tab.url || "").host === ORIGIN;
       } catch (e) {}
       if (!isAd) {
         return chrome.tabs.create({ url: "https://" + ORIGIN }).then(function (created) {
-          var tabId = created.id;
-          var listener = function (id, info) {
+          const tabId = created.id;
+          const listener = function (id, info) {
             if (id === tabId && info && info.status === "complete") {
               chrome.runtime.sendMessage({ type: "EXECUTE_PICKER", tabId: tabId }, function () {});
               chrome.tabs.onUpdated.removeListener(listener);
