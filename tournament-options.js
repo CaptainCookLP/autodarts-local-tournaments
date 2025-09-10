@@ -1,19 +1,6 @@
 // tournament-options.js
 const T_KEY = 'tournament';
-const MODE_OPTIONS = ['301','501','701','901'];
-
 function $(id){return document.getElementById(id);}
-
-function modeSelect(id){
-  const sel = document.createElement('select');
-  sel.id = id;
-  for(const m of MODE_OPTIONS){
-    const opt=document.createElement('option');
-    opt.value=m; opt.textContent=m;
-    sel.appendChild(opt);
-  }
-  return sel;
-}
 
 async function load(){
   const data = (await chrome.storage.local.get([T_KEY]))[T_KEY] || {
@@ -88,5 +75,11 @@ async function save(){
 });
 
 $('saveTournament').addEventListener('click',save);
+const openBtn = document.getElementById('openTournamentTree');
+if (openBtn) {
+  openBtn.addEventListener('click', () => {
+    window.open(chrome.runtime.getURL('tournament-tree.html'));
+  });
+}
 
 load().catch(console.error);
