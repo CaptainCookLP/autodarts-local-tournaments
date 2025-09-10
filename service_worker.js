@@ -140,36 +140,36 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   });
   return true;
 });
-if (chrome && chrome.webNavigation && chrome.webNavigation.onCompleted) {
-  chrome.webNavigation.onCompleted.addListener(async function (details) {
-    try {
-      const url = details.url || "";
-      if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(url)) return;
-      const tabId = details.tabId;
-      const store = await chrome.storage.local.get([T_KEY]);
-      const t = store[T_KEY];
-      if (!t || !t.matches || t.current == null) return;
-      const m = t.matches[t.current];
-      if (!m || !m.p1 || !m.p2) return;
-      const settings = await chrome.storage.sync.get(SETTINGS_KEYS);
-      const basePayload = Object.assign({}, settings, {
-        base: m.mode,
-        players: m.p1 + ", " + m.p2,
-        __autodarts_helper: true,
-      });
-      const lobbyPayload = Object.assign({}, settings, {
-        players: m.p1 + ", " + m.p2,
-        __autodarts_helper_lobby: true,
-      });
-      await chrome.tabs.sendMessage(tabId, { type: "APPLY_AND_OPEN", payload: basePayload });
-      await chrome.tabs.sendMessage(tabId, { type: "CONFIGURE_LOBBY", payload: lobbyPayload });
-      t.current = Math.min(t.current + 1, t.matches.length);
-      const o = {}; o[T_KEY] = t; await chrome.storage.local.set(o);
-    } catch (e) {
-      console.warn("tournament handler", e);
-    }
-  });
-}
+
+chrome.webNavigation.onCompleted.addListener(async function (details) {
+  try {
+    const url = details.url || "";
+    if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(url)) return;
+    const tabId = details.tabId;
+    const store = await chrome.storage.local.get([T_KEY]);
+    let t = store[T_KEY];
+    if (!t || !t.matches || t.current == null) return;
+    const m = t.matches[t.current];
+    if (!m || !m.p1 || !m.p2) return;
+    const settings = await chrome.storage.sync.get(SETTINGS_KEYS);
+    const basePayload = Object.assign({}, settings, {
+      base: m.mode,
+      players: m.p1 + ", " + m.p2,
+      __autodarts_helper: true,
+    });
+    const lobbyPayload = Object.assign({}, settings, {
+      players: m.p1 + ", " + m.p2,
+      __autodarts_helper_lobby: true,
+    });
+    await chrome.tabs.sendMessage(tabId, { type: "APPLY_AND_OPEN", payload: basePayload });
+    await chrome.tabs.sendMessage(tabId, { type: "CONFIGURE_LOBBY", payload: lobbyPayload });
+    t.current = Math.min(t.current + 1, t.matches.length);
+    const o = {}; o[T_KEY] = t; await chrome.storage.local.set(o);
+  } catch (e) {
+    console.warn("tournament handler", e);
+  }
+});
+
 if (
   chrome &&
   chrome.contextMenus &&
