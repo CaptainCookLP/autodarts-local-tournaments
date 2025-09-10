@@ -61,6 +61,7 @@
       }, 250);
     });
   }
+  
   function readScores() {
     const rows = document.querySelectorAll('#ad-ext-player-display > div');
     return Array.from(rows).map(r => ({
@@ -81,6 +82,7 @@
         p2: scores.find(s => s.name === match.p2) || null,
       };
     }
+
     const loser = match.p1 === winner ? match.p2 : match.p1;
     if (data.current === 0) {
       data.matches[2].p1 = loser;
@@ -124,6 +126,7 @@
       names = [m.p1, m.p2].filter(Boolean).join(',');
     }
     await new Promise(r => setTimeout(r, INIT_DELAY_MS));
+
     if (removeHost) {
       const ok = await removeFirstPlayerWithRetry();
       if (!ok) console.warn('[Autodarts Helper] Erster Spieler (Host) konnte nicht entfernt werden');
