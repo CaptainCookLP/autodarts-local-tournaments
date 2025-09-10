@@ -75,5 +75,11 @@ async function save(){
 });
 
 $('saveTournament').addEventListener('click',save);
+const openBtn = document.getElementById('openTournamentTree');
+if (openBtn) {
+  openBtn.addEventListener('click', () => {
+    window.open(chrome.runtime.getURL('tournament-tree.html'));
+  });
+}
 
 load().catch(console.error);

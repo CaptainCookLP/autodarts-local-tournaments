@@ -1,5 +1,7 @@
 (() => {
   const T_KEY = 'tournament';
+  const INIT_DELAY_MS = 2000;
+
 
   function findFirstPlayerRow() {
     const xp = `//h2[normalize-space(.)='Players']/following::table[1]//tbody/tr[1]`;
@@ -60,7 +62,7 @@
       }, 250);
     });
   }
-  
+
   function readScores() {
     const rows = document.querySelectorAll('#ad-ext-player-display > div');
     return Array.from(rows).map(r => ({
@@ -116,6 +118,8 @@
       const m = tournament.matches[tournament.current];
       names = [m.p1, m.p2].filter(Boolean).join(',');
     }
+
+    await new Promise(r => setTimeout(r, INIT_DELAY_MS));
 
     if (removeHost) {
       const ok = await removeFirstPlayerWithRetry();
