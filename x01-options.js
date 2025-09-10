@@ -42,7 +42,8 @@ function setDefaults() {
 document.getElementById("match").addEventListener("change", toggleMatchUI);
 document.getElementById("saveX01").addEventListener("click", async () => {
   await save();
-  alert("Gespeichert.");
+  if (window.AD_SETTINGS && window.AD_SETTINGS.toast) window.AD_SETTINGS.toast("Gespeichert.");
+  else console.log("Gespeichert.");
 });
 document.getElementById("reset").addEventListener("click", setDefaults);
 
