@@ -21,7 +21,7 @@ const SETTINGS_KEYS = [
 
 function updateBadge(t) {
   try {
-    if (t && t.matches && t.matches.length) {
+    if (t && t.enabled && t.matches && t.matches.length) {
       chrome.action.setBadgeText({ text: 'T' });
       chrome.action.setBadgeBackgroundColor({ color: '#d9534f' });
     } else {

@@ -4,6 +4,7 @@ function $(id){return document.getElementById(id);}
 
 async function load(){
   const data = (await chrome.storage.local.get([T_KEY]))[T_KEY] || {
+    enabled:false,
     current:0,
     matches:[
       {p1:'Spieler1',p2:'Spieler2',mode:'501',winner:null},
@@ -12,6 +13,7 @@ async function load(){
       {p1:'',p2:'',mode:'501',winner:null}
     ]
   };
+  $('tEnabled').checked=!!data.enabled;
   // fill inputs
   $('m1p1').value=data.matches[0].p1;
   $('m1p2').value=data.matches[0].p2;
@@ -38,12 +40,13 @@ function gather(){
   const m1lose=m1win? (m1win===m1p1?m1p2:m1p1):null;
   const m2lose=m2win? (m2win===m2p1?m2p2:m2p1):null;
   return {
+    enabled:$('tEnabled').checked,
     current:0,
     matches:[
-      {p1:m1p1,p2:m1p2,mode:$('m1mode').value,winner:m1win},
-      {p1:m2p1,p2:m2p2,mode:$('m2mode').value,winner:m2win},
-      {p1:m1lose||'Verlierer Spiel1',p2:m2lose||'Verlierer Spiel2',mode:$('m3mode').value,winner:null},
-      {p1:m1win||'Sieger Spiel1',p2:m2win||'Sieger Spiel2',mode:$('m4mode').value,winner:null}
+      {p1:m1p1,p2:m1p2,mode:$('m1mode').value,winner:m1win,result:null},
+      {p1:m2p1,p2:m2p2,mode:$('m2mode').value,winner:m2win,result:null},
+      {p1:m1lose||'Verlierer Spiel1',p2:m2lose||'Verlierer Spiel2',mode:$('m3mode').value,winner:null,result:null},
+      {p1:m1win||'Sieger Spiel1',p2:m2win||'Sieger Spiel2',mode:$('m4mode').value,winner:null,result:null}
     ]
   };
 }
@@ -56,7 +59,11 @@ function updateBracket(){
   $('finalP2').textContent=t.matches[3].p2;
   chrome.storage.local.get([T_KEY]).then(r=>{
     const saved=r[T_KEY];
-    $('status').textContent=saved?`Nächstes Spiel: ${saved.matches[saved.current]?.p1||'-'} vs ${saved.matches[saved.current]?.p2||'-'}`:'Noch kein Turnier gespeichert';
+    if(!saved||!saved.enabled){
+      $('status').textContent='Turniermodus deaktiviert';
+    }else{
+      $('status').textContent=`Nächstes Spiel: ${saved.matches[saved.current]?.p1||'-'} vs ${saved.matches[saved.current]?.p2||'-'}`;
+    }
   });
 }
 
@@ -68,7 +75,7 @@ async function save(){
   else console.log('Gespeichert.');
 }
 
-['m1p1','m1p2','m2p1','m2p2','m1mode','m2mode','m3mode','m4mode','m1w1','m1w2','m2w1','m2w2'].forEach(id=>{
+['tEnabled','m1p1','m1p2','m2p1','m2p2','m1mode','m2mode','m3mode','m4mode','m1w1','m1w2','m2w1','m2w2'].forEach(id=>{
   const el=$(id);
   if(el) el.addEventListener('input',updateBracket);
   if(el && el.type==='radio') el.addEventListener('change',updateBracket);
