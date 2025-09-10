@@ -1,4 +1,6 @@
 (() => {
+  const T_KEY = 'tournament';
+
   function findFirstPlayerRow() {
     const xp = `//h2[normalize-space(.)='Players']/following::table[1]//tbody/tr[1]`;
     return document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue || null;
@@ -58,20 +60,74 @@
       }, 250);
     });
   }
+  
+  function readScores() {
+    const rows = document.querySelectorAll('#ad-ext-player-display > div');
+    return Array.from(rows).map(r => ({
+      name: r.querySelector('.ad-ext-player-name p')?.textContent?.trim(),
+      score: parseInt(r.querySelector('.ad-ext-player-score')?.textContent || '', 10)
+    }));
+  }
+
+  async function storeWinner(winner, data) {
+    const match = data.matches[data.current];
+    if (!match) return;
+    match.winner = winner;
+    const loser = match.p1 === winner ? match.p2 : match.p1;
+    if (data.current === 0) {
+      data.matches[2].p1 = loser;
+      data.matches[3].p1 = winner;
+    } else if (data.current === 1) {
+      data.matches[2].p2 = loser;
+      data.matches[3].p2 = winner;
+    }
+    data.current = Math.min(data.current + 1, data.matches.length - 1);
+    await chrome.storage.local.set({ [T_KEY]: data });
+  }
+
+  async function watchForWinner(data) {
+    const modeEl = document.querySelector('#ad-ext-game-variant');
+    if (!/x01/i.test(modeEl?.textContent || '')) return;
+    for (;;) {
+      const scores = readScores();
+      const win = scores.find(p => p.score === 0);
+      if (win && win.name) {
+        await storeWinner(win.name, data);
+        break;
+      }
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+
   async function run() {
     try {
       await waitForPlayers();
     } catch (e) {
       console.warn('[Autodarts Helper] Spielerbereich nicht gefunden');
     }
-    const { players = '', removeHost = false } = await chrome.storage.sync.get(['players','removeHost']);
+
+    const [{ players = '', removeHost = false }, tData] = await Promise.all([
+      chrome.storage.sync.get(['players', 'removeHost']),
+      chrome.storage.local.get([T_KEY])
+    ]);
+    let names = players;
+    const tournament = tData[T_KEY];
+    if (tournament && tournament.matches && tournament.matches[tournament.current]) {
+      const m = tournament.matches[tournament.current];
+      names = [m.p1, m.p2].filter(Boolean).join(',');
+    }
+
     if (removeHost) {
       const ok = await removeFirstPlayerWithRetry();
       if (!ok) console.warn('[Autodarts Helper] Erster Spieler (Host) konnte nicht entfernt werden');
       await new Promise(r => setTimeout(r, 120));
     }
-    if (players) {
-      await addPlayersCSV(players);
+
+    if (names) {
+      await addPlayersCSV(names);
+    }
+    if (tournament && tournament.matches && tournament.matches[tournament.current]) {
+      watchForWinner(tournament).catch(console.error);
     }
   }
   if (/https:\/\/play\.autodarts\.io\/matches\//.test(location.href)) {
