@@ -1,1 +1,10 @@
-# autodarts-local-tournaments
+# Autodarts Toolkit
+
+Combines local tournament automation with live data scraping for [play.autodarts.io](https://play.autodarts.io).
+
+## Features
+- Plan a four-player bracket and automatically load the next match when opening a new lobby.
+- Configure and launch X01 lobbies with preset rules and players.
+- Pick page elements and export live match data via webhook.
+
+Install as a Chrome extension in developer mode.

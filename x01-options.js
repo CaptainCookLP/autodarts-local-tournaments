@@ -40,7 +40,7 @@ function setDefaults() {
 }
 
 document.getElementById("match").addEventListener("change", toggleMatchUI);
-document.getElementById("save").addEventListener("click", async () => {
+document.getElementById("saveX01").addEventListener("click", async () => {
   await save();
   alert("Gespeichert.");
 });
