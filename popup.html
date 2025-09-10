@@ -1,22 +1,28 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Autodarts Toolkit</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 14px; }
-    button { width: 100%; padding: 10px; margin-top: 8px; display: block; text-align: center; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { filter: brightness(0.95); }
-    a { width: 100%; padding: 10px; margin-top: 8px; display: block; text-align: center; text-decoration: none; background: #eee; color: #333; border-radius: 6px; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="options.css"/>
+  <title>Autodarts – Turnier</title>
 </head>
 <body>
-  <h2 style="margin:0 0 8px">Autodarts Toolkit</h2>
-  <button id="start">Automatisierung starten</button>
-  <button id="addVar">+ Variable per Klick auswählen</button>
-  <button id="openOptions">Einstellungen öffnen</button>
-  <script src="settings.js"></script>
-  <script src="popup.js"></script>
+  <div class="card" style="width:360px">
+    <div class="header">
+      <strong>Lokales Turnier</strong>
+      <div class="actions">
+        <button class="btn" id="openOptions">Optionen</button>
+      </div>
+    </div>
+    <div class="section" id="status">
+      <div class="small">Spieler: <span id="cntPlayers">0</span> · Format: <span id="fmt">—</span> · Best of: <span id="bo">—</span></div>
+      <hr/>
+      <div id="nextMatch" class="list"></div>
+      <button class="btn primary" id="startNow">Nächstes Match starten</button>
+    </div>
+  </div>
+
+  <!-- Keine Inline-Skripte. Nur externe Module laden. -->
+  <script type="module" src="popup.js"></script>
 </body>
 </html>

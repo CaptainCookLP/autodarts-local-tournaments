@@ -1,78 +1,14 @@
-// popup.js
-const ORIGIN = "play.autodarts.io";
+import { loadState } from './storage.js';
 
-async function getCurrentTab() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  return tab;
-}
+const s = loadState();
+document.getElementById('cntPlayers').textContent = s.players.length;
+document.getElementById('fmt').textContent = s.format === 'single-elim' ? 'SE' : 'DE';
+document.getElementById('bo').textContent = s.bestOf;
 
-async function sendWithRetry(tabId, message, tries = 12, delayMs = 750) {
-  for (let i = 0; i < tries; i++) {
-    try {
-      await chrome.tabs.sendMessage(tabId, message);
-      return true;
-    } catch (e) {
-      console.debug("sendMessage failed", e);
-      await new Promise(r => setTimeout(r, delayMs));
-    }
-  }
-  return false;
-}
-
-function startPicker() {
-  chrome.tabs
-    .query({ active: true, currentWindow: true })
-    .then(function (tabs) {
-      const tab = tabs && tabs[0];
-      if (!tab) return;
-      let isAd = false;
-      try {
-        isAd = new URL(tab.url || "").host === ORIGIN;
-      } catch (e) {}
-      if (!isAd) {
-        return chrome.tabs.create({ url: "https://" + ORIGIN }).then(function (created) {
-          const tabId = created.id;
-          const listener = function (id, info) {
-            if (id === tabId && info && info.status === "complete") {
-              chrome.runtime.sendMessage({ type: "EXECUTE_PICKER", tabId: tabId }, function () {});
-              chrome.tabs.onUpdated.removeListener(listener);
-            }
-          };
-          chrome.tabs.onUpdated.addListener(listener);
-        });
-      }
-      return chrome.runtime.sendMessage({ type: "EXECUTE_PICKER", tabId: tab.id }, function () {});
-    });
-}
-
-document.getElementById("openOptions").addEventListener("click", function () {
-  if (chrome.runtime.openOptionsPage) chrome.runtime.openOptionsPage();
+document.getElementById('openOptions').addEventListener('click', () => {
+  if (chrome?.runtime?.openOptionsPage) chrome.runtime.openOptionsPage();
 });
 
-document.getElementById("addVar").addEventListener("click", function () {
-  if (chrome.runtime.openOptionsPage) chrome.runtime.openOptionsPage();
-  setTimeout(startPicker, 300);
+document.getElementById('startNow').addEventListener('click', () => {
+  chrome.runtime?.sendMessage?.({ type: 'startNextMatch' });
 });
-
-document.getElementById("start").addEventListener("click", async () => {
-  const tab = await getCurrentTab();
-  const settings = await window.AD_SETTINGS.getAll();
-
-  if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(tab.url || "")) {
-    await chrome.tabs.update(tab.id, { url: "https://play.autodarts.io/lobbies/new/x01" });
-    await new Promise(r => setTimeout(r, 900));
-  }
-
-  await sendWithRetry(tab.id, {
-    type: "APPLY_AND_OPEN",
-    payload: { ...settings, __autodarts_helper: true }
-  }, 12, 800);
-
-  await sendWithRetry(tab.id, {
-    type: "CONFIGURE_LOBBY",
-    payload: { ...settings, __autodarts_helper_lobby: true }
-  }, 14, 850);
-
-  window.close();
-});
-
