@@ -18,6 +18,24 @@ const SETTINGS_KEYS = [
   "removeHost",
   "startGame",
 ];
+
+function updateBadge(t) {
+  try {
+    if (t && t.enabled && t.matches && t.matches.length) {
+      chrome.action.setBadgeText({ text: 'T' });
+      chrome.action.setBadgeBackgroundColor({ color: '#d9534f' });
+    } else {
+      chrome.action.setBadgeText({ text: '' });
+    }
+  } catch (e) {}
+}
+
+chrome.storage.local.get([T_KEY]).then(r => updateBadge(r[T_KEY]));
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes[T_KEY]) {
+    updateBadge(changes[T_KEY].newValue);
+  }
+});
 function getConfigs() {
   return chrome.storage.sync.get([CFG_KEY]).then(function (r) {
     return r && r[CFG_KEY] ? r[CFG_KEY] : {};

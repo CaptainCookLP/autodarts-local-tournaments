@@ -30,6 +30,11 @@
       "matches": ["https://play.autodarts.io/*"],
       "js": ["content/autoscrape.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://play.autodarts.io/matches/*"],
+      "js": ["tournament.js"],
+      "run_at": "document_idle"
     }
   ]
 }

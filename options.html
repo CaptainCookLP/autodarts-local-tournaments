@@ -13,6 +13,7 @@
         <button id="tab-settings" class="tab active">Scraper</button>
         <button id="tab-x01" class="tab">X01 Helper</button>
         <button id="tab-output" class="tab">Output</button>
+        <button id="tab-tournament" class="tab">Turnier</button>
       </nav>
     </header>
     <main>
@@ -169,6 +170,63 @@
           </div>
         </div>
       </section>
+      <section id="view-tournament" class="view">
+        <div class="card">
+          <h2>Turnierbaum</h2>
+          <label class="inline"><input type="checkbox" id="tEnabled" /> Turniermodus aktivieren</label>
+          <div class="row">
+            <div>
+              <h3>Spiel 1</h3>
+              <input id="m1p1" placeholder="Spieler 1" />
+              <label><input type="radio" name="m1w" id="m1w1" /> Sieger</label>
+              <input id="m1p2" placeholder="Spieler 2" />
+              <label><input type="radio" name="m1w" id="m1w2" /> Sieger</label>
+              <label>Modus
+                <select id="m1mode">
+                  <option>301</option><option selected>501</option><option>701</option><option>901</option>
+                </select>
+              </label>
+            </div>
+            <div>
+              <h3>Spiel 2</h3>
+              <input id="m2p1" placeholder="Spieler 3" />
+              <label><input type="radio" name="m2w" id="m2w1" /> Sieger</label>
+              <input id="m2p2" placeholder="Spieler 4" />
+              <label><input type="radio" name="m2w" id="m2w2" /> Sieger</label>
+              <label>Modus
+                <select id="m2mode">
+                  <option>301</option><option selected>501</option><option>701</option><option>901</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <h3>Spiel um Platz 3</h3>
+              <span id="thirdP1">Verlierer Spiel1</span> vs <span id="thirdP2">Verlierer Spiel2</span>
+              <label>Modus
+                <select id="m3mode">
+                  <option>301</option><option selected>501</option><option>701</option><option>901</option>
+                </select>
+              </label>
+            </div>
+            <div>
+              <h3>Finale</h3>
+              <span id="finalP1">Sieger Spiel1</span> vs <span id="finalP2">Sieger Spiel2</span>
+              <label>Modus
+                <select id="m4mode">
+                  <option>301</option><option selected>501</option><option>701</option><option>901</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <p id="status"></p>
+          <div class="row">
+            <button id="saveTournament">Speichern</button>
+            <button id="openTournamentTree" class="secondary">Turnierbaum öffnen</button>
+          </div>
+        </div>
+      </section>
     </main>
     <div id="addVarModal" class="modal hidden">
       <div class="modal-card">
@@ -182,8 +240,10 @@
       </div>
     </div>
     <footer><small>v1.0.4</small></footer>
-      <script src="scraper-options.js"></script>
-      <script src="settings.js"></script>
-      <script src="x01-options.js"></script>
-    </body>
-  </html>
+        <script src="options-tabs.js"></script>
+        <script src="scraper-options.js"></script>
+        <script src="settings.js"></script>
+        <script src="x01-options.js"></script>
+        <script src="tournament-options.js"></script>
+      </body>
+    </html>
