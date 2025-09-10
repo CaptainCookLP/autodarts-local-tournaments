@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Autodarts X01 Helper",
+  "version": "1.3.0",
+  "action": { "default_popup": "popup.html" },
+  "options_page": "options.html",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://play.autodarts.io/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://play.autodarts.io/lobbies/new/x01"],
+      "js": ["settings.js", "content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://play.autodarts.io/lobbies/*"],
+      "js": ["settings.js", "lobby.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

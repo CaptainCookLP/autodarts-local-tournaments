@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Autodarts X01 Helper – Einstellungen</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 18px; max-width: 720px; }
+    h2 { margin: 0 0 10px; }
+    label { display: block; margin-top: 10px; font-weight: 600; }
+    select, input, button { padding: 8px; width: 100%; margin-top: 6px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hidden { display: none; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin: 14px 0; }
+  </style>
+</head>
+<body>
+  <h2>Autodarts X01 Helper – Einstellungen</h2>
+
+  <div class="card">
+    <h3>X01-Einstellungen</h3>
+
+    <label for="base">Base score</label>
+    <select id="base">
+      <option>121</option><option>170</option><option>301</option>
+      <option selected>501</option><option>701</option><option>901</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label for="in">In mode</label>
+        <select id="in">
+          <option>Straight</option><option>Double</option><option>Master</option>
+        </select>
+      </div>
+      <div>
+        <label for="out">Out mode</label>
+        <select id="out">
+          <option>Straight</option><option selected>Double</option><option>Master</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="rounds">Max rounds</label>
+    <select id="rounds">
+      <option>15</option><option>20</option><option selected>50</option><option>80</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label for="bull">Bull mode</label>
+        <select id="bull">
+          <option selected>25/50</option><option>50/50</option>
+        </select>
+      </div>
+      <div>
+        <label for="bulloff">Bull-off</label>
+        <select id="bulloff">
+          <option selected>Off</option><option>Normal</option><option>Official</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="lobby">Lobby Sichtbarkeit</label>
+    <select id="lobby">
+      <option>Public</option><option selected>Private</option>
+    </select>
+
+    <label for="match">Match mode</label>
+    <select id="match">
+      <option>Off</option><option>Legs</option><option>Sets</option>
+    </select>
+
+    <div id="match-legs" class="row hidden">
+      <div>
+        <label for="legsTo">First to (legs)</label>
+        <select id="legsTo">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option><option value="11">11</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="match-sets" class="row hidden">
+      <div>
+        <label for="setsTo">First to (sets)</label>
+        <select id="setsTo">
+          <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+          <option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select>
+      </div>
+      <div>
+        <label for="legsPerSet">First to (legs per set)</label>
+        <select id="legsPerSet">
+          <option value="2">2</option><option value="3">3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Lobby-Automatisierung</h3>
+
+    <label for="board">Board (Name oder UUID)</label>
+    <input id="board" placeholder="z. B. PiBoard oder 470117f6-..." />
+
+    <label for="players">Zusätzliche Spieler (Komma getrennt)</label>
+    <input id="players" placeholder="z. B. PLAYER 1, NICKLAS" />
+
+    <div class="row">
+      <label><input type="checkbox" id="removeHost" /> Initialen Spieler (Host) entfernen</label>
+      <label><input type="checkbox" id="startGame" checked /> Spiel automatisch starten</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="save">Speichern</button>
+    <button id="reset">Auf Standard zurücksetzen</button>
+  </div>
+  
+  <script src="settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
