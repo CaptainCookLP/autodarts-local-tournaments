@@ -7,3 +7,5 @@ Combines local tournament automation with live data scraping for [play.autodarts
 - Pick page elements and export live match data via webhook.
 
 Install as a Chrome extension in developer mode.
+
+V1.1.3
