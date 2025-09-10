@@ -2,6 +2,7 @@
   const T_KEY = 'tournament';
   const INIT_DELAY_MS = 2000;
 
+
   function findFirstPlayerRow() {
     const xp = `//h2[normalize-space(.)='Players']/following::table[1]//tbody/tr[1]`;
     return document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue || null;
@@ -61,6 +62,7 @@
       }, 250);
     });
   }
+
   function readScores() {
     const rows = document.querySelectorAll('#ad-ext-player-display > div');
     return Array.from(rows).map(r => ({
@@ -105,6 +107,7 @@
     } catch (e) {
       console.warn('[Autodarts Helper] Spielerbereich nicht gefunden');
     }
+
     const [{ players = '', removeHost = false }, tData] = await Promise.all([
       chrome.storage.sync.get(['players', 'removeHost']),
       chrome.storage.local.get([T_KEY])
@@ -115,12 +118,15 @@
       const m = tournament.matches[tournament.current];
       names = [m.p1, m.p2].filter(Boolean).join(',');
     }
+
     await new Promise(r => setTimeout(r, INIT_DELAY_MS));
+
     if (removeHost) {
       const ok = await removeFirstPlayerWithRetry();
       if (!ok) console.warn('[Autodarts Helper] Erster Spieler (Host) konnte nicht entfernt werden');
       await new Promise(r => setTimeout(r, 120));
     }
+
     if (names) {
       await addPlayersCSV(names);
     }
