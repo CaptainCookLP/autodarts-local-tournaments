@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Autodarts X01 Helper</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 14px; }
-    button, a { width: 100%; padding: 10px; margin-top: 8px; display: inline-block; text-align: center; }
-    a { text-decoration: none; background: #eee; color: #333; border-radius: 6px; }
-    button { background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { filter: brightness(0.95); }
-  </style>
-</head>
-<body>
-  <h2 style="margin:0 0 8px">Autodarts X01 Helper</h2>
-  <button id="start">Automatisierung starten</button>
-  <a href="options.html" target="_blank" rel="noopener">Einstellungen öffnen</a>
-  <script src="settings.js"></script>
-  <script src="popup.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        min-width: 200px;
+        padding: 10px;
+      }
+      button {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="addVar">+ Variable per Klick auswählen</button>
+    <button id="openOptions">Optionen öffnen</button>
+    <script src="popup.js"></script>
+  </body>
 </html>
