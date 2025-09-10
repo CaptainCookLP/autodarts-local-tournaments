@@ -2,7 +2,7 @@
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <title>Autodarts Toolkit – Einstellungen</title>
+    <title>Autodarts Scraper – Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="options.css" />
   </head>
@@ -11,7 +11,7 @@
       <h1>Autodarts Toolkit</h1>
       <nav>
         <button id="tab-settings" class="tab active">Scraper</button>
-        <button id="tab-tournament" class="tab">Tournament</button>
+        <button id="tab-x01" class="tab">X01 Helper</button>
         <button id="tab-output" class="tab">Output</button>
       </nav>
     </header>
@@ -43,8 +43,9 @@
         <div class="card">
           <h2>HTTP POST</h2>
           <div class="row">
-            <label class="inline"><input type="checkbox" id="whEnabled" /> aktivieren</label>
-            <input id="whUrl" placeholder="https://example.com/hook" />
+            <label class="inline"
+              ><input type="checkbox" id="whEnabled" /> aktivieren</label
+            ><input id="whUrl" placeholder="https://example.com/hook" />
           </div>
           <p class="hint">
             Sende bei Änderung JSON an diese URL (Content-Type: application/json).
@@ -53,64 +54,109 @@
         <div class="card">
           <h2>Tools</h2>
           <div class="row">
-            <button class="secondary" id="downloadXml">Settings als XML herunterladen</button>
-            <input type="file" id="importXml" accept=".xml,application/xml" style="display:none;" />
+            <button class="secondary" id="downloadXml">
+              Settings als XML herunterladen
+            </button>
+            <input
+              type="file"
+              id="importXml"
+              accept=".xml,application/xml"
+              style="display:none;"
+            />
             <button id="importBtn">Settings aus XML importieren</button>
             <button id="importDefaultsBtn">Werkseinstellungen laden</button>
           </div>
         </div>
       </section>
-      <section id="view-tournament" class="view">
+      <section id="view-x01" class="view">
         <div class="card">
-          <h2>Vier-Spieler Turnier</h2>
-          <div class="match">
-            <h3>Spiel 1</h3>
-            <input id="m1p1" placeholder="Spieler 1" />
-            <input id="m1p2" placeholder="Spieler 2" />
-            <select id="m1mode">
-              <option value="301">301</option>
-              <option value="501" selected>501</option>
-              <option value="701">701</option>
-              <option value="901">901</option>
-            </select>
-            <label><input type="radio" name="m1w" id="m1w1" /> P1 gewinnt</label>
-            <label><input type="radio" name="m1w" id="m1w2" /> P2 gewinnt</label>
+          <h2>X01-Einstellungen</h2>
+          <label for="base">Base score</label>
+          <select id="base">
+            <option>121</option><option>170</option><option>301</option>
+            <option selected>501</option><option>701</option><option>901</option>
+          </select>
+          <div class="row">
+            <div>
+              <label for="in">In mode</label>
+              <select id="in">
+                <option>Straight</option><option>Double</option><option>Master</option>
+              </select>
+            </div>
+            <div>
+              <label for="out">Out mode</label>
+              <select id="out">
+                <option>Straight</option><option selected>Double</option><option>Master</option>
+              </select>
+            </div>
           </div>
-          <div class="match">
-            <h3>Spiel 2</h3>
-            <input id="m2p1" placeholder="Spieler 3" />
-            <input id="m2p2" placeholder="Spieler 4" />
-            <select id="m2mode">
-              <option value="301">301</option>
-              <option value="501" selected>501</option>
-              <option value="701">701</option>
-              <option value="901">901</option>
-            </select>
-            <label><input type="radio" name="m2w" id="m2w1" /> P3 gewinnt</label>
-            <label><input type="radio" name="m2w" id="m2w2" /> P4 gewinnt</label>
+          <label for="rounds">Max rounds</label>
+          <select id="rounds">
+            <option>15</option><option>20</option><option selected>50</option><option>80</option>
+          </select>
+          <div class="row">
+            <div>
+              <label for="bull">Bull mode</label>
+              <select id="bull">
+                <option selected>25/50</option><option>50/50</option>
+              </select>
+            </div>
+            <div>
+              <label for="bulloff">Bull-off</label>
+              <select id="bulloff">
+                <option selected>Off</option><option>Normal</option><option>Official</option>
+              </select>
+            </div>
           </div>
-          <div class="match">
-            <h3>Spiel um Platz 3</h3>
-            <select id="m3mode">
-              <option value="301">301</option>
-              <option value="501" selected>501</option>
-              <option value="701">701</option>
-              <option value="901">901</option>
-            </select>
-            <p><span id="thirdP1">Verlierer Spiel 1</span> vs <span id="thirdP2">Verlierer Spiel 2</span></p>
+          <label for="lobby">Lobby Sichtbarkeit</label>
+          <select id="lobby">
+            <option>Public</option><option selected>Private</option>
+          </select>
+          <label for="match">Match mode</label>
+          <select id="match">
+            <option>Off</option><option>Legs</option><option>Sets</option>
+          </select>
+          <div id="match-legs" class="row hidden">
+            <div>
+              <label for="legsTo">First to (legs)</label>
+              <select id="legsTo">
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                <option value="10">10</option><option value="11">11</option>
+              </select>
+            </div>
           </div>
-          <div class="match">
-            <h3>Finale</h3>
-            <select id="m4mode">
-              <option value="301">301</option>
-              <option value="501" selected>501</option>
-              <option value="701">701</option>
-              <option value="901">901</option>
-            </select>
-            <p><span id="finalP1">Sieger Spiel 1</span> vs <span id="finalP2">Sieger Spiel 2</span></p>
+          <div id="match-sets" class="row hidden">
+            <div>
+              <label for="setsTo">First to (sets)</label>
+              <select id="setsTo">
+                <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                <option value="5">5</option><option value="6">6</option><option value="7">7</option>
+              </select>
+            </div>
+            <div>
+              <label for="legsPerSet">First to (legs per set)</label>
+              <select id="legsPerSet">
+                <option value="2">2</option><option value="3">3</option>
+              </select>
+            </div>
           </div>
-          <div class="row right"><button id="saveTournament">Speichern</button></div>
-          <p id="status"></p>
+        </div>
+        <div class="card">
+          <h2>Lobby-Automatisierung</h2>
+          <label for="board">Board (Name oder UUID)</label>
+          <input id="board" placeholder="z. B. PiBoard oder 470117f6-..." />
+          <label for="players">Zusätzliche Spieler (Komma getrennt)</label>
+          <input id="players" placeholder="z. B. PLAYER 1, NICKLAS" />
+          <div class="row">
+            <label><input type="checkbox" id="removeHost" /> Initialen Spieler (Host) entfernen</label>
+            <label><input type="checkbox" id="startGame" checked /> Spiel automatisch starten</label>
+          </div>
+        </div>
+        <div class="row">
+          <button id="saveX01">Speichern</button>
+          <button id="reset">Auf Standard zurücksetzen</button>
         </div>
       </section>
       <section id="view-output" class="view">
@@ -135,8 +181,9 @@
         <div class="row right"><button class="secondary" id="m-cancel">Abbrechen</button><button id="m-add">Hinzufügen</button></div>
       </div>
     </div>
-    <footer><small>v0.1.0</small></footer>
-    <script src="options.js"></script>
-    <script src="tournament.js"></script>
-  </body>
-</html>
+    <footer><small>v1.0.4</small></footer>
+      <script src="scraper-options.js"></script>
+      <script src="settings.js"></script>
+      <script src="x01-options.js"></script>
+    </body>
+  </html>

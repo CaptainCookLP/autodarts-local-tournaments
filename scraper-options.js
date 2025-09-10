@@ -22,12 +22,12 @@ function selectTab(id) {
 document.getElementById("tab-settings").addEventListener("click", function () {
   selectTab("settings");
 });
+document.getElementById("tab-x01").addEventListener("click", function () {
+  selectTab("x01");
+});
 document.getElementById("tab-output").addEventListener("click", function () {
   selectTab("output");
   updateLive();
-});
-document.getElementById("tab-tournament").addEventListener("click", function () {
-  selectTab("tournament");
 });
 
 function getConfigs() {

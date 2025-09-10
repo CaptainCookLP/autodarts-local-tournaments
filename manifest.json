@@ -1,17 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Autodarts Local Tournaments",
-  "version": "0.1.0",
-  "description": "Automates local X01 tournaments and scrapes live data from play.autodarts.io.",
-  "permissions": ["storage", "scripting", "activeTab", "contextMenus", "tabs", "webNavigation"],
+  "name": "Autodarts Toolkit",
+  "version": "1.4.0",
+  "description": "Helper for local tournaments and live data scraping on autodarts.io.",
+  "permissions": ["storage", "scripting", "activeTab", "contextMenus", "tabs"],
   "host_permissions": ["https://play.autodarts.io/*"],
   "background": { "service_worker": "service_worker.js" },
   "action": { "default_title": "Autodarts Toolkit", "default_popup": "popup.html" },
   "options_page": "options.html",
   "content_scripts": [
     {
+      "matches": ["https://play.autodarts.io/lobbies/new/x01"],
+      "js": ["settings.js", "content/x01.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://play.autodarts.io/lobbies/*"],
+      "js": ["settings.js", "content/lobby.js"],
+      "run_at": "document_idle"
+    },
+    {
       "matches": ["https://play.autodarts.io/*"],
-      "js": ["content/autoscrape.js", "content/x01.js", "content/lobby.js"],
+      "js": ["content/autoscrape.js"],
       "run_at": "document_idle"
     }
   ]

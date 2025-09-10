@@ -1,11 +1,17 @@
-# Autodarts Local Tournaments
+<<<<<<< HEAD
+# Autodarts Toolkit
 
-This browser extension bundles a small local X01 tournament helper with the live data scraper from [autodarts-scraper](https://github.com/CaptainCookLP/autodarts-scraper).
+Combines local tournament automation with live data scraping for [play.autodarts.io](https://play.autodarts.io).
 
 ## Features
-- Configure a four-player knockout bracket and automatically apply players and modes when a new X01 lobby opens.
-- Scrape scoreboard data on play.autodarts.io with selectable CSS selectors and optional webhook export.
-- View the latest scraped JSON directly in the extension.
+- Configure and launch X01 lobbies with preset rules and players.
+- Pick page elements and export live match data via webhook.
 
-## Usage
-Load this folder as an unpacked extension in your Chromium browser and open the options page to set up the scraper and tournament.
+Install as a Chrome extension in developer mode.
+
+V1.1.3
+=======
+# autodarts-local-tournaments
+
+Test
+>>>>>>> origin/combine
