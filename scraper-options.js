@@ -11,6 +11,28 @@ const copyBtn = document.getElementById("copyJson");
 const refreshBtn = document.getElementById("refresh");
 const dlXmlBtn = document.getElementById("downloadXml");
 
+function selectTab(id) {
+  const tabs = document.querySelectorAll(".tab");
+  const views = document.querySelectorAll(".view");
+  for (let i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+  for (let j = 0; j < views.length; j++) views[j].classList.remove("active");
+  document.getElementById("tab-" + id).classList.add("active");
+  document.getElementById("view-" + id).classList.add("active");
+}
+document.getElementById("tab-settings").addEventListener("click", function () {
+  selectTab("settings");
+});
+document.getElementById("tab-x01").addEventListener("click", function () {
+  selectTab("x01");
+});
+document.getElementById("tab-output").addEventListener("click", function () {
+  selectTab("output");
+  updateLive();
+});
+document.getElementById("tab-tournament").addEventListener("click", function () {
+  selectTab("tournament");
+});
+
 function getConfigs() {
   return chrome.storage.sync.get([CFG_KEY]).then(function (r) {
     return r[CFG_KEY] || {};

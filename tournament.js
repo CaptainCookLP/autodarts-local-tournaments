@@ -60,6 +60,7 @@
       }, 250);
     });
   }
+  
   function readScores() {
     const rows = document.querySelectorAll('#ad-ext-player-display > div');
     return Array.from(rows).map(r => ({
@@ -104,6 +105,7 @@
     } catch (e) {
       console.warn('[Autodarts Helper] Spielerbereich nicht gefunden');
     }
+
     const [{ players = '', removeHost = false }, tData] = await Promise.all([
       chrome.storage.sync.get(['players', 'removeHost']),
       chrome.storage.local.get([T_KEY])
@@ -114,11 +116,13 @@
       const m = tournament.matches[tournament.current];
       names = [m.p1, m.p2].filter(Boolean).join(',');
     }
+
     if (removeHost) {
       const ok = await removeFirstPlayerWithRetry();
       if (!ok) console.warn('[Autodarts Helper] Erster Spieler (Host) konnte nicht entfernt werden');
       await new Promise(r => setTimeout(r, 120));
     }
+
     if (names) {
       await addPlayersCSV(names);
     }
