@@ -5,6 +5,7 @@
 ## Features
 - Configure and launch X01 lobbies with preset rules and players.
 - Replace the host and enqueue new players automatically when opening match pages.
+- Define a simple four-player tournament bracket in the extension options.
 - Pick page elements and export live match data via webhook.
 
 Install as a Chrome extension in developer mode.
