@@ -140,6 +140,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   });
   return true;
 });
+
 chrome.webNavigation.onCompleted.addListener(async function (details) {
   try {
     const url = details.url || "";
@@ -168,6 +169,7 @@ chrome.webNavigation.onCompleted.addListener(async function (details) {
     console.warn("tournament handler", e);
   }
 });
+
 if (
   chrome &&
   chrome.contextMenus &&
