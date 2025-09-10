@@ -1,7 +1,7 @@
-var CFG_KEY = "autodartsConfigs";
-var LIVE_KEY_PREFIX = "liveData::";
-var T_KEY = "tournament";
-var SETTINGS_KEYS = [
+const CFG_KEY = "autodartsConfigs";
+const LIVE_KEY_PREFIX = "liveData::";
+const T_KEY = "tournament";
+const SETTINGS_KEYS = [
   "base",
   "in",
   "out",
@@ -24,13 +24,13 @@ function getConfigs() {
   });
 }
 function setConfigs(c) {
-  var o = {};
+  const o = {};
   o[CFG_KEY] = c;
   return chrome.storage.sync.set(o);
 }
 function getConfigFor(origin) {
   return getConfigs().then(function (cfgs) {
-    var cfg = cfgs[origin] || {
+    const cfg = cfgs[origin] || {
       variables: [],
       webhook: { enabled: false, url: "" },
     };
@@ -43,7 +43,7 @@ function getConfigFor(origin) {
   });
 }
 function saveLiveData(origin, payload) {
-  var o = {};
+  const o = {};
   o[LIVE_KEY_PREFIX + origin] = payload;
   return chrome.storage.local.set(o).then(function () {
     return chrome.storage.local.set({ lastUpdate: Date.now() });
@@ -72,8 +72,8 @@ function pushExports(origin, data) {
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   (function () {
     if (msg && msg.type === "LIVE_DATA") {
-      var origin = msg.origin;
-      var data = msg.data || {};
+      const origin = msg.origin;
+      const data = msg.data || {};
       return saveLiveData(origin, data)
         .then(function () {
           return pushExports(origin, data);
@@ -98,13 +98,13 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
         });
     }
     if (msg && msg.type === "GET_LIVE") {
-      var key = LIVE_KEY_PREFIX + msg.origin;
+      const key = LIVE_KEY_PREFIX + msg.origin;
       return chrome.storage.local.get([key]).then(function (obj) {
         sendResponse({ ok: true, data: obj[key] || {} });
       });
     }
     if (msg && msg.type === "EXECUTE_PICKER") {
-      var tabId =
+      const tabId =
         sender && sender.tab && sender.tab.id ? sender.tab.id : msg.tabId;
       if (!tabId) {
         sendResponse({ ok: false, error: "No tabId" });
@@ -140,34 +140,36 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   });
   return true;
 });
-chrome.webNavigation.onCompleted.addListener(async function (details) {
-  try {
-    var url = details.url || "";
-    if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(url)) return;
-    var tabId = details.tabId;
-    var store = await chrome.storage.local.get([T_KEY]);
-    var t = store[T_KEY];
-    if (!t || !t.matches || t.current == null) return;
-    var m = t.matches[t.current];
-    if (!m || !m.p1 || !m.p2) return;
-    var settings = await chrome.storage.sync.get(SETTINGS_KEYS);
-    var basePayload = Object.assign({}, settings, {
-      base: m.mode,
-      players: m.p1 + ", " + m.p2,
-      __autodarts_helper: true,
-    });
-    var lobbyPayload = Object.assign({}, settings, {
-      players: m.p1 + ", " + m.p2,
-      __autodarts_helper_lobby: true,
-    });
-    await chrome.tabs.sendMessage(tabId, { type: "APPLY_AND_OPEN", payload: basePayload });
-    await chrome.tabs.sendMessage(tabId, { type: "CONFIGURE_LOBBY", payload: lobbyPayload });
-    t.current = Math.min(t.current + 1, t.matches.length);
-    var o = {}; o[T_KEY] = t; await chrome.storage.local.set(o);
-  } catch (e) {
-    console.warn("tournament handler", e);
-  }
-});
+if (chrome && chrome.webNavigation && chrome.webNavigation.onCompleted) {
+  chrome.webNavigation.onCompleted.addListener(async function (details) {
+    try {
+      const url = details.url || "";
+      if (!/https:\/\/play\.autodarts\.io\/lobbies\/new\/x01/.test(url)) return;
+      const tabId = details.tabId;
+      const store = await chrome.storage.local.get([T_KEY]);
+      const t = store[T_KEY];
+      if (!t || !t.matches || t.current == null) return;
+      const m = t.matches[t.current];
+      if (!m || !m.p1 || !m.p2) return;
+      const settings = await chrome.storage.sync.get(SETTINGS_KEYS);
+      const basePayload = Object.assign({}, settings, {
+        base: m.mode,
+        players: m.p1 + ", " + m.p2,
+        __autodarts_helper: true,
+      });
+      const lobbyPayload = Object.assign({}, settings, {
+        players: m.p1 + ", " + m.p2,
+        __autodarts_helper_lobby: true,
+      });
+      await chrome.tabs.sendMessage(tabId, { type: "APPLY_AND_OPEN", payload: basePayload });
+      await chrome.tabs.sendMessage(tabId, { type: "CONFIGURE_LOBBY", payload: lobbyPayload });
+      t.current = Math.min(t.current + 1, t.matches.length);
+      const o = {}; o[T_KEY] = t; await chrome.storage.local.set(o);
+    } catch (e) {
+      console.warn("tournament handler", e);
+    }
+  });
+}
 if (
   chrome &&
   chrome.contextMenus &&

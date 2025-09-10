@@ -77,7 +77,8 @@ async function save(){
   const t=gather();
   await chrome.storage.local.set({[T_KEY]:t});
   updateBracket();
-  alert('Gespeichert.');
+  if (window.AD_SETTINGS && window.AD_SETTINGS.toast) window.AD_SETTINGS.toast('Gespeichert.');
+  else console.log('Gespeichert.');
 }
 
 ['m1p1','m1p2','m2p1','m2p2','m1mode','m2mode','m3mode','m4mode','m1w1','m1w2','m2w1','m2w2'].forEach(id=>{
